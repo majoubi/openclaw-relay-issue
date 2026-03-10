@@ -1,7 +1,9 @@
 # Problème technique : OpenClaw Relay - Erreur de connexion gateway
 
+## ⚠️ STATUT : ✅ RÉSOLU
+
 ## Description du problème
-Le service de contrôle du navigateur OpenClaw Relay rencontre des erreurs de connexion persistantes avec le message "gateway closed (1008): pairing required". Le port 18789 est utilisé par un processus Node.js non identifié, ce qui cause des conflits et empêche le gateway de fonctionner correctement.
+Le service de contrôle du navigateur OpenClaw Relay rencontrait des erreurs de connexion persistantes avec le message "gateway closed (1008): pairing required". Le port 18789 était utilisé par un processus Node.js non identifié, ce qui causait des conflits et empêchait le gateway de fonctionner correctement.
 
 ## Détails techniques
 - **Erreur principale**: `gateway closed (1008): pairing required`
@@ -27,34 +29,34 @@ Le service de contrôle du navigateur OpenClaw Relay rencontre des erreurs de co
 3. Instabilité du service gateway
 4. Processus node.exe qui maintient le port ouvert même après arrêt du service
 
-## Actions entreprises
-1. Redémarrage du gateway sur différents ports (18790, 18800, 18810) - Échec
-2. Arrêt complet et redémarrage du service - Échec
-3. Vérification de l'état du gateway - Échec
-4. Tentative de connexion via l'extension Chrome - Échec
-5. Identification du processus en conflit (pid 7936 - node.exe)
+## Solution appliquée ✅
+1. **Identification du processus en conflit**: `netstat -ano | findstr :18789`
+2. **Suppression du processus en conflit**: `taskkill /F /PID 7936`
+3. **Redémarrage du gateway**: `openclaw gateway restart`
+4. **Vérification de l'état**: `openclaw gateway status`
 
-## Logs pertinents
-- openclaw-2026-03-10.log (disponible dans %LOCALAPPDATA%\Temp\openclaw\)
-- Erreurs de connexion gateway dans les logs système
-- Processus node.exe (pid 7936) utilisant le port 18789
+## Résultat final
+- **Gateway**: ✅ Fonctionne correctement (running: true, cdpReady: true)
+- **Connexion**: ✅ OK
+- **Test de validation**: ✅ Page Google ouverte avec succès
 
-## Priorité
-**Haute** - Le problème empêche l'utilisation des fonctionnalités de contrôle du navigateur essentielles.
-
-## Solution proposée
-1. Tuer le processus node.exe (pid 7936) qui maintient le port ouvert
-2. Redémarrer le gateway OpenClaw
-3. Vérifier la configuration du port dans openclaw.json
-4. Réinstaller l'extension OpenClaw Relay si nécessaire
+## Actions préventives
+1. Surveiller les processus node.exe qui utilisent le port 18789
+2. Configurer un port différent si le problème persiste
+3. Automatiser le redémarrage du gateway si nécessaire
 
 ## Impact utilisateur
-- Impossible d'utiliser les fonctionnalités de contrôle du navigateur
-- Impossible d'accéder à Google Maps via l'extension
-- Impossible d'automatiser les tâches de navigation web
+- ✅ **Résolu**: Toutes les fonctionnalités de contrôle du navigateur sont maintenant disponibles
+- ✅ **Accès**: Google Maps et autres services web fonctionnent via l'extension
+- ✅ **Automatisation**: Les tâches de navigation web peuvent être automatisées
 
 ## Environnement
 - **Système d'exploitation**: Windows 10/11
 - **Navigateur**: Brave Browser
 - **Version OpenClaw**: 2026.2.19-2
 - **Port par défaut**: 18789
+
+## Voir aussi
+- [SOLUTION.md](./SOLUTION.md) - Détails complets de la solution
+- [OpenClaw Documentation](https://docs.openclaw.ai)
+- [OpenClaw GitHub](https://github.com/openclaw/openclaw)
